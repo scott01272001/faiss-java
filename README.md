@@ -25,6 +25,9 @@ Only support CPU version faiss now
 - IndexFlatIP
 - fvec_renorm_L2 (used for cosine similarity search)
 
-# Build
+## Build
 mvn clean package
 
+## Build Faiss
+cmake -B build -DFAISS_ENABLE_GPU=OFF -DFAISS_ENABLE_PYTHON=OFF -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF -DFAISS_ENABLE_C_API=ON .
+make -C build install

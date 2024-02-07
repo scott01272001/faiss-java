@@ -61,10 +61,10 @@ public class FaissBenchmark {
     @Measurement(time = 20, iterations = 3)
     public void searchInCosineSimilarity() {
         try (PointerScope scope = new PointerScope()) {
-            FloatPointer xb = VectorHelper.makeFloatArray(new PointerPointer<>(features), dbSize, dim);
+            FloatPointer xb = Utils.makeFloatArray(features);
             Faiss.fvec_renorm_L2(dim, dbSize, xb);
 
-            FloatPointer xq = VectorHelper.makeFloatArray(new PointerPointer<>(querys), querySize, dim);
+            FloatPointer xq = Utils.makeFloatArray(querys);
             Faiss.fvec_renorm_L2(dim, querySize, xq);
 
             try (IndexFlatIP index = new IndexFlatIP(dim)) {

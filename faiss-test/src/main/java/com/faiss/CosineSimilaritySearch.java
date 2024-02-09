@@ -29,10 +29,12 @@ public class CosineSimilaritySearch {
             }
         }
 
-        FloatPointer xb = Utils.makeFloatArray(features);
+        long start = System.currentTimeMillis();
+
+        FloatPointer xb = Utils.makeFlattenedArray(features);
         Faiss.fvec_renorm_L2(dim, dbSize, xb);
 
-        FloatPointer xq = Utils.makeFloatArray(querys);
+        FloatPointer xq = Utils.makeFlattenedArray(querys);
         Faiss.fvec_renorm_L2(dim, querySize, xq);
 
         try (IndexFlatIP index = new IndexFlatIP(dim)) {
@@ -46,14 +48,18 @@ public class CosineSimilaritySearch {
 
             index.search(querySize, xq, k, distances, labels, null);
         }
+
+        System.out.println(System.currentTimeMillis() - start);
     }
 
     public static void search() {
-        float[] f1 = new float[] { 0.9f, 0.9f };
-        float[][] features = new float[1][];
+        float[] f1 = new float[] {13f, 96f};
+        float[] f2 = new float[] {83f, 22f};
+        float[][] features = new float[2][];
         features[0] = f1;
+        features[1] = f2;
 
-        float[] q1 = new float[] { 0.25f, 1 };
+        float[] q1 = new float[] {1.0f, 1.0f};
         float[][] querys = new float[1][];
         querys[0] = q1;
 
@@ -61,18 +67,30 @@ public class CosineSimilaritySearch {
         int nb = features.length; // database size
         int nq = querys.length;
 
-        FloatPointer xb = Utils.makeFloatArray(features);
-        FloatPointer xq = Utils.makeFloatArray(querys);
+        FloatPointer xb = Utils.makeFlattenedArray(features);
+        FloatPointer xq = Utils.makeFlattenedArray(querys);
 
         Faiss.fvec_renorm_L2(d, nb, xb);
         Faiss.fvec_renorm_L2(d, nq, xq);
+        float[] aaa = new float[d * nb];
+        float[] bbb = new float[d * nq];
+        xb.get(aaa);
+        for (float a : aaa) {
+            System.out.print(a + " ");
+        }
+        System.out.println();
+        xq.get(bbb);
+        for (float b : bbb) {
+            System.out.print(b + " ");
+        }
+        System.out.println();
 
         IndexFlatIP index = new IndexFlatIP(d);
         System.out.println("is_trained = " + index.is_trained());
         index.add(nb, xb);
         System.out.println("ntotal = " + index.ntotal());
 
-        int k = 1;
+        int k = 2;
         LongPointer labels = new LongPointer(k * nq);
         FloatPointer distances = new FloatPointer(k * nq);
 

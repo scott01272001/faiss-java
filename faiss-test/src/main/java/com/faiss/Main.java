@@ -2,7 +2,7 @@ package com.faiss;
 
 public class Main {
     public static void main(String[] args) {
-        CosineSimilaritySearch.search();
+        CosineSimilaritySearch.searchRandom();
 
         // L2Search.search();
     }

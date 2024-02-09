@@ -61,10 +61,10 @@ public class FaissBenchmark {
     @Measurement(time = 20, iterations = 3)
     public void searchInCosineSimilarity() {
         try (PointerScope scope = new PointerScope()) {
-            FloatPointer xb = Utils.makeFloatArray(features);
+            FloatPointer xb = Utils.makeFlattenedArray(features);
             Faiss.fvec_renorm_L2(dim, dbSize, xb);
 
-            FloatPointer xq = Utils.makeFloatArray(querys);
+            FloatPointer xq = Utils.makeFlattenedArray(querys);
             Faiss.fvec_renorm_L2(dim, querySize, xq);
 
             try (IndexFlatIP index = new IndexFlatIP(dim)) {
@@ -80,10 +80,7 @@ public class FaissBenchmark {
     }
 
     public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder()
-                .include(FaissBenchmark.class.getSimpleName())
-                .forks(1)
-                .build();
+        Options opt = new OptionsBuilder().include(FaissBenchmark.class.getSimpleName()).forks(1).build();
 
         new Runner(opt).run();
     }
